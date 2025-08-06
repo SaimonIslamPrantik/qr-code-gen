@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-950 text-white">
+  <head>
+    <meta charset="UTF-8" />
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="flex items-center justify-center min-h-screen px-4">
+    <div class="bg-gray-900 p-8 rounded-2xl shadow-xl w-full max-w-lg">
+      <h1 class="text-3xl font-bold mb-4 text-center">🚀 QR Code Generator</h1>
+
+      <!-- Generate QR form -->
+      <form action="/generate" method="POST" class="mb-4 space-y-4">
+        <input
+          name="url"
+          type="text"
+          placeholder="Enter a URL"
+          value="<%= url %>"
+          required
+          class="w-full rounded-lg px-4 py-2 bg-gray-800 border border-gray-700 focus:outline-none"
+        />
+
+        <% if (hasLogo) { %>
+          <div class="flex items-center justify-between text-sm">
+            <label class="flex items-center gap-2">
+              <input type="checkbox" name="useLogo" class="form-checkbox" />
+              Embed uploaded logo
+            </label>
+          </div>
+        <% } %>
+
+        <button
+          type="submit"
+          class="bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-lg transition w-full"
+        >
+          Generate QR Code
+        </button>
+      </form>
+
+      <!-- Upload logo -->
+      <form action="/upload-logo" method="POST" enctype="multipart/form-data" class="mb-4">
+        <label class="block text-sm mb-1">Upload Logo (PNG/JPG)</label>
+        <div class="flex items-center gap-2">
+          <input type="file" name="logo" accept="image/*" required class="text-sm" />
+          <button
+            type="submit"
+            class="bg-purple-600 hover:bg-purple-700 px-3 py-1 rounded-lg"
+          >
+            Upload
+          </button>
+        </div>
+      </form>
+
+      <!-- Delete logo (separate form) -->
+      <% if (hasLogo) { %>
+        <form action="/delete-logo" method="POST" class="mb-6 text-right">
+          <button
+            type="submit"
+            class="text-red-500 hover:underline text-sm"
+          >🗑 Delete Logo</button>
+        </form>
+      <% } %>
+
+      <!-- QR Result -->
+      <% if (qr) { %>
+        <div class="text-center mt-6">
+          <img src="<%= qr %>" alt="QR Code" class="mx-auto mb-4" />
+          <a
+            href="/download?url=<%= encodeURIComponent(url) %>&useLogo=<%= hasLogo %>"
+            class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg"
+            download
+          >
+            📥 Download PNG
+          </a>
+        </div>
+      <% } %>
+    </div>
+  </body>
+</html>
